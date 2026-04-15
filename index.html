@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cognitive Fitness Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        canvas {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Cognitive Fitness Analyzer</h1>
+
+    <input type="text" id="user_name" placeholder="Enter Name"><br>
+    <input type="number" id="stress_level" placeholder="Stress Level (0-10)"><br>
+    <input type="number" id="focus_score" placeholder="Focus Score (0-10)"><br>
+
+    <button onclick="analyze()">Analyze</button>
+
+    <div class="result" id="output"></div>
+
+    <canvas id="resultChart" width="400" height="300"></canvas>
+
+    <script>
+        let chart;
+
+        async function analyze() {
+
+            const user_name = document.getElementById("user_name").value;
+            const stress_level = parseInt(document.getElementById("stress_level").value);
+            const focus_score = parseInt(document.getElementById("focus_score").value);
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/analyze?user_name=${user_name}&stress_level=${stress_level}&focus_score=${focus_score}`,
+                { method: "POST" }
+            );
+
+            const data = await response.json();
+
+            document.getElementById("output").innerHTML = `
+                <p><b>Adaptive Score:</b> ${data.adaptive_score}</p>
+                <p><b>Recommendation:</b> ${data.recommendation}</p>
+            `;
+
+            // Destroy old chart if exists
+            if (chart) {
+                chart.destroy();
+            }
+
+            const ctx = document.getElementById("resultChart").getContext("2d");
+
+            // PIE CHART
+            chart = new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: ["Stress Level", "Focus Score", "Adaptive Score"],
+                    datasets: [{
+                        label: "Cognitive Metrics",
+                        data: [stress_level, focus_score, data.adaptive_score],
+                        backgroundColor: [
+                            "#ff6b6b",
+                            "#4ecdc4",
+                            "#556270"
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
