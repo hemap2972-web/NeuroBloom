@@ -1,4 +1,12 @@
-# NeuroBloom – Cognitive Fitness Analyzer
+# ⚠️ Deprecated Version
+
+This is an older version of the project.
+
+👉 Latest Version: https://github.com/hemap2972-web/NeuroBloom-New
+
+Please refer to the latest repository for updated code and deployment.
+
+---# NeuroBloom – Cognitive Fitness Analyzer
 
 NeuroBloom is an AI-powered cognitive fitness analysis system that evaluates user stress levels and focus scores to generate adaptive scores and personalized recommendations.
 
